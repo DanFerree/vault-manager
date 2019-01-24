@@ -12,13 +12,29 @@ const pool = new Pool({
 });
 
 const getVaultBySourceId = (request, response) => {
-  const sourceId = parseInt(request.params.id, 10);
+  const sourceId = parseInt(request.params.sourceId, 10);
 
   pool.query('SELECT * FROM vault WHERE sourceId = $1', [sourceId], (error, results) => {
     if (error) {
       throw error;
     }
-    response.status(200).json(results.rows);
+
+    if (results.rowCount) {
+      const row = results.rows[0];
+      if (row.maintenance) {
+        response.status(503);
+      } else {
+        response.status(200).json({
+          hostname: row.hostname,
+          database: row.databaseName,
+          username: row.tallyRole,
+          password: row.tallyPassword,
+          cert: row.tallyCert,
+        });
+      }
+    } else {
+      response.status(404);
+    }
   });
 };
 

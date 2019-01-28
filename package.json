@@ -4,7 +4,12 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "pretest": "eslint --ignore-path .gitignore ."
+    "pretest": "eslint --ignore-path .gitignore .",
+    "test": "mocha ./test -name '*.spec.js' --recursive --exit",
+    "test:watch": "npm test -- --watch",
+    "depcheck": "depcheck",
+    "stylecheck": "eslint src/**/*.js test/**/*.js",
+    "check": "npm audit && npm run stylecheck && npm run depcheck && npm outdated"
   },
   "dependencies": {
     "body-parser": "^1.18.3",

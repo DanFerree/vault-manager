@@ -1,0 +1,28 @@
+language: node_js
+
+node_js:
+  - "lts/*"
+services:
+  - postgresql
+
+addons:
+  postgresql: "10"
+  apt:
+    packages:
+    - postgresql-10
+    - postgresql-client-10
+    - postgresql-contrib-10
+    - postgresql-plpython-10
+
+before_install:
+# Create the vault database, schema and required roles.
+- git clone https://github.com/HDCbc/vault.git
+- cd ./vault
+# The adapter password specified below must match what is specified in .env.test.
+# For some reason Travis runs PG10 on port 5433. This must also be specified in .env.test.
+- PGPORT=5433 TALLY_PASSWORD="tally_pw" ADAPTER_PASSWORD="adapter_pw" TRUSTED_KEY="trusted_key" sh ./sh/init.sh
+
+script:
+- npm ci        # Install the npm packages
+- npm test      # Run the automated test suite
+- npm run check # Check for security, dependency and style issues

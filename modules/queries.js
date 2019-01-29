@@ -20,7 +20,7 @@ const getVaultBySourceId = async (request, response) => {
     if (results.rowCount) {
       const row = results.rows[0];
       if (row.maintenance) {
-        response.status(503);
+        response.status(503).json({ error: true });
       } else {
         response.status(200).json({
           hostname: row.hostname,
@@ -31,10 +31,10 @@ const getVaultBySourceId = async (request, response) => {
         });
       }
     } else {
-      response.status(404);
+      response.status(404).json({ error: true });
     }
   } catch (error) {
-    response.status(500).send({ error: true });
+    response.status(500).json({ error: true });
     throw error;
   }
 };
@@ -62,7 +62,7 @@ const createVault = async (request, response) => {
     // Clone database.
     result = await pool.query('SELECT * FROM settings LIMIT 1');
     if (result.rowCount === 0) {
-      response.status(500).send({ error: true });
+      response.status(500).json({ error: true });
       return;
     }
     const settings = result.rows[0];
@@ -82,11 +82,11 @@ const createVault = async (request, response) => {
     await nextPool.query(`CREATE ROLE ${adapterRole} WITH LOGIN PASSWORD '${adapterPassword}'`);
     await nextPool.query(`CREATE ROLE ${apiRole}`);
 
-    await pool.query('UPDATE vault SET hostname = $1, databasename = $2, tallyrole = $3, tallypassword = $4, adapterrole = $5, adapterpassword = $6 WHERE id = $7', [settings.nextVaultHostName, databaseName, tallyRole, tallyPassword, adapterRole, adapterPassword, parseInt(id, 10)]);
+    await pool.query('UPDATE vault SET hostname = $1, databasename = $2, tallyrole = $3, tallypassword = $4, adapterrole = $5, adapterpassword = $6 WHERE id = $7', [nextVaultHostName, databaseName, tallyRole, tallyPassword, adapterRole, adapterPassword, parseInt(id, 10)]);
 
     response.status(201).json({ id });
   } catch (error) {
-    response.status(500).send({ error: true });
+    response.status(500).json({ error: true });
     throw error;
   }
 };

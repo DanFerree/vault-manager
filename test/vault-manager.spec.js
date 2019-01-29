@@ -24,7 +24,9 @@ const pool = new pg.Pool();
 describe('vault-manager', () => {
   describe('POST /vault/', () => {
     before('Wipe database to prepare for testing.', (done) => {
-      const wipeQuery = 'DELETE FROM vault;';
+      const wipeQuery = `DELETE FROM vault;
+      INSERT INTO vault (sourceid, hostname, databasename, tallyrole, tallypassword, adapterrole, adapterpassword, maintenance) VALUES (2, 'localhost', 'vault_34', 'vault_34_tally', 'e18ab7ad6a9ab4e495dfaa046402501a', 'vault_34_adapter', '0f7703c45d53866913cfcad139750c71', TRUE);
+      `;
       pool.connect((connErr, client, release) => {
         if (connErr) {
           release();
@@ -71,6 +73,26 @@ describe('vault-manager', () => {
           done();
         });
     });
+
+    it('should receive 404', (done) => {
+      chai.request(app)
+        .get('/vault/3/connection/adapter')
+        .end((err, res) => {
+          if (err) done(err);
+          expect(res).to.have.status(404);
+          done();
+        });
+    });
+
+    it('should receive 503', (done) => {
+      chai.request(app)
+        .get('/vault/2/connection/adapter')
+        .end((err, res) => {
+          if (err) done(err);
+          expect(res).to.have.status(503);
+          done();
+        });
+    });
   });
 
   describe('GET /database/{sourceId}/connection/tally', () => {
@@ -84,6 +106,26 @@ describe('vault-manager', () => {
           expect(res.body).to.haveOwnProperty('database');
           expect(res.body).to.haveOwnProperty('username');
           expect(res.body).to.haveOwnProperty('password');
+          done();
+        });
+    });
+
+    it('should receive 404', (done) => {
+      chai.request(app)
+        .get('/database/3/connection/tally')
+        .end((err, res) => {
+          if (err) done(err);
+          expect(res).to.have.status(404);
+          done();
+        });
+    });
+
+    it('should receive 503', (done) => {
+      chai.request(app)
+        .get('/database/2/connection/tally')
+        .end((err, res) => {
+          if (err) done(err);
+          expect(res).to.have.status(503);
           done();
         });
     });

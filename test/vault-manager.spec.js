@@ -56,6 +56,18 @@ describe('vault-manager', () => {
             done();
           });
       });
+
+      it('should receive 409', (done) => {
+        chai.request(app)
+          .post('/vault/')
+          .set('content-type', 'application/json')
+          .send(testData.vaultInsert)
+          .end((err, res) => {
+            if (err) done(err);
+            expect(res).to.have.status(409);
+            done();
+          });
+      });
     });
   });
 

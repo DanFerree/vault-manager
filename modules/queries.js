@@ -71,7 +71,7 @@ const createVault = async (request, response) => {
 
     const nextPool = new Pool({
       user: process.env.PGUSER,
-      host: nextVaultHostName,
+      hostname: nextVaultHostName,
       database: vaultTemplateName,
       password: process.env.PGPASSWORD,
       port: process.env.PGPORT,

@@ -49,9 +49,36 @@ describe('vault-manager', () => {
           .send(testData.vaultInsert)
           .end((err, res) => {
             if (err) done(err);
-            console.log('test1');
             expect(res).to.have.status(201);
             expect(res.body).to.haveOwnProperty('id');
+            done();
+          });
+      });
+
+      it('should get an adapter successfully', (done) => {
+        chai.request(app)
+          .get('/vault/1/connection/adapter')
+          .end((err, res) => {
+            if (err) done(err);
+            expect(res).to.have.status(200);
+            expect(res.body).to.haveOwnProperty('hostname');
+            expect(res.body).to.haveOwnProperty('database');
+            expect(res.body).to.haveOwnProperty('username');
+            expect(res.body).to.haveOwnProperty('password');
+            done();
+          });
+      });
+
+      it('should get a tally successfully', (done) => {
+        chai.request(app)
+          .get('/database/1/connection/tally')
+          .end((err, res) => {
+            if (err) done(err);
+            expect(res).to.have.status(200);
+            expect(res.body).to.haveOwnProperty('hostname');
+            expect(res.body).to.haveOwnProperty('database');
+            expect(res.body).to.haveOwnProperty('username');
+            expect(res.body).to.haveOwnProperty('password');
             done();
           });
       });

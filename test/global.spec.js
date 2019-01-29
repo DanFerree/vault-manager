@@ -12,7 +12,6 @@ const fs = require('fs');
 const path = require('path');
 
 before((done) => {
-  console.log('test1');
   const testLocalPath = path.resolve(process.cwd(), '.env.test.local');
   const testPath = path.resolve(process.cwd(), '.env.test');
 

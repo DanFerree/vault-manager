@@ -11,10 +11,11 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const pg = require('pg');
 
-// const app = require('../bin/www');
-// const testData = require('./data');
+const app = require('../app');
+const testData = require('./data');
 
-// const expect = chai.expect;
+// eslint-disable-next-line prefer-destructuring
+const expect = chai.expect;
 
 chai.use(chaiHttp);
 
@@ -40,6 +41,20 @@ describe('vault-manager', () => {
       });
     });
 
-    it('test', () => {});
+    describe('Vault', () => {
+      it('should successfully insert a vault record', (done) => {
+        chai.request(app)
+          .post('/vault/')
+          .set('content-type', 'application/json')
+          .send(testData.vaultInsert)
+          .end((err, res) => {
+            if (err) done(err);
+            console.log('test1');
+            expect(res).to.have.status(201);
+            expect(res.body).to.haveOwnProperty('id');
+            done();
+          });
+      });
+    });
   });
 });

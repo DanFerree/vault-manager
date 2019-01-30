@@ -16,11 +16,11 @@ addons:
 
 before_install:
 # Create the vault database, schema and required roles.
-- git clone https://github.com/HDCbc/vault.git
+- git clone https://github.com/dev7788/vault.git
 - cd ./vault
 # The adapter password specified below must match what is specified in .env.test.
 # For some reason Travis runs PG10 on port 5433. This must also be specified in .env.test.
-- PGPORT=5433 TALLY_PASSWORD="tally_pw" ADAPTER_PASSWORD="adapter_pw" TRUSTED_KEY="trusted_key" sh ./sh/init.sh
+- PGPORT=5432 DB_NAME="management" DB_ROLE="manager" DB_PASSWORD="manager_pw" TALLY_PASSWORD="tally_pw" ADAPTER_PASSWORD="adapter_pw" TRUSTED_KEY="trusted_key" sh ./sh/init.sh
 
 script:
 - npm ci        # Install the npm packages

@@ -48,8 +48,19 @@ describe('vault-manager', () => {
           .end((err, res) => {
             if (err) done(err);
             expect(res).to.have.status(201);
-            expect(res.body).to.haveOwnProperty('id');
-            done();
+            expect(res.body.id).to.equal('3');
+
+            chai.request(app)
+              .get('/vault/3/connection/adapter')
+              // eslint-disable-next-line no-shadow
+              .end((err, res) => {
+                if (err) done(err);
+                expect(res).to.have.status(200);
+                expect(res.body.hostname).to.equal('localhost');
+                expect(res.body.databasename).to.equal('vault_3');
+                expect(res.body.username).to.equal('vault_3_adapter');
+                done();
+              });
           });
       });
 

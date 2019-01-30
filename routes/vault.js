@@ -5,7 +5,7 @@ const router = express.Router();
 const db = require('../modules/queries');
 
 router.get('/:sourceId/connection/adapter', (request, response) => {
-  const sourceId = parseInt(request.params.sourceId, 10);
+  const { sourceId } = request.params;
   db.getVaultBySourceId(sourceId)
     .then((result) => {
       switch (result.status) {
@@ -30,7 +30,7 @@ router.get('/:sourceId/connection/adapter', (request, response) => {
     });
 });
 router.get('/:sourceId/connection/tally', (request, response) => {
-  const sourceId = parseInt(request.params.sourceId, 10);
+  const { sourceId } = request.params;
   db.getVaultBySourceId(sourceId)
     .then((result) => {
       switch (result.status) {

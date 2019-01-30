@@ -9,7 +9,8 @@
     "test:watch": "npm test -- --watch",
     "depcheck": "depcheck",
     "stylecheck": "eslint src/**/*.js test/**/*.js",
-    "check": "npm audit && npm run stylecheck && npm run depcheck && npm outdated"
+    "check": "npm audit && npm run stylecheck && npm run depcheck && npm outdated",
+    "coverage": "nyc -- npm test"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
@@ -28,6 +29,7 @@
     "eslint": "^5.12.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.15.0",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0"
   }
 }

@@ -95,7 +95,7 @@ describe('vault-manager', () => {
         });
     });
 
-    it('should receive 404 if an adapter with sourceId does not exist.', (done) => {
+    it('should receive 404 if sourceId not found.', (done) => {
       chai.request(app)
         .get('/vault/3/connection/adapter')
         .end((err, res) => {
@@ -131,7 +131,7 @@ describe('vault-manager', () => {
         });
     });
 
-    it('should receive 404 if a record does not exist.', (done) => {
+    it('should receive 404 if sourceId not found.', (done) => {
       chai.request(app)
         .get('/vault/3/connection/tally')
         .end((err, res) => {

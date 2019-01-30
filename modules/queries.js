@@ -44,7 +44,7 @@ const createVault = async (request, response) => {
   try {
     let result = await pool.query('SELECT * FROM vault WHERE sourceid = $1', [sourceId]);
     if (result.rowCount) {
-      response.status(409).json({ msg: 'Already exists' });
+      response.status(409).json({ msg: 'sourceId already exists.' });
       return;
     }
 

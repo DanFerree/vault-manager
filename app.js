@@ -5,7 +5,6 @@ const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
 const vaultRouter = require('./routes/vault');
-const databaseRouter = require('./routes/database');
 
 const app = express();
 
@@ -23,7 +22,6 @@ require('dotenv').config();
 
 app.use('/', indexRouter);
 app.use('/vault', vaultRouter);
-app.use('/database', databaseRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

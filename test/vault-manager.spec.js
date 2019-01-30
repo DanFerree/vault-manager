@@ -21,7 +21,7 @@ chai.use(chaiHttp);
 const pool = new pg.Pool();
 
 describe('vault-manager', () => {
-  beforeEach('wipe database to prepare testing.', async () => {\
+  beforeEach('wipe database to prepare testing.', async () => {
     try {
       await pool.query('DROP DATABASE IF EXISTS vault_3');
       await pool.query('DROP ROLE IF EXISTS vault_3_api');
@@ -76,10 +76,10 @@ describe('vault-manager', () => {
         .end((err, res) => {
           if (err) done(err);
           expect(res).to.have.status(200);
-          expect(res.body).to.haveOwnProperty('hostname');
-          expect(res.body).to.haveOwnProperty('database');
-          expect(res.body).to.haveOwnProperty('username');
-          expect(res.body).to.haveOwnProperty('password');
+          expect(res.body.hostname).to.equal('localhost');
+          expect(res.body.databasename).to.equal('vault_1');
+          expect(res.body.username).to.equal('vault_1_adapter');
+          expect(res.body.password).to.equal('0f7703c45d53866913cfcad139750c71');
           done();
         });
     });
@@ -105,24 +105,24 @@ describe('vault-manager', () => {
     });
   });
 
-  describe('GET /database/{sourceId}/connection/tally', () => {
+  describe('GET /vault/{sourceId}/connection/tally', () => {
     it('should get a tally successfully.', (done) => {
       chai.request(app)
-        .get('/database/1/connection/tally')
+        .get('/vault/1/connection/tally')
         .end((err, res) => {
           if (err) done(err);
           expect(res).to.have.status(200);
-          expect(res.body).to.haveOwnProperty('hostname');
-          expect(res.body).to.haveOwnProperty('database');
-          expect(res.body).to.haveOwnProperty('username');
-          expect(res.body).to.haveOwnProperty('password');
+          expect(res.body.hostname).to.equal('localhost');
+          expect(res.body.databasename).to.equal('vault_1');
+          expect(res.body.username).to.equal('vault_1_tally');
+          expect(res.body.password).to.equal('e18ab7ad6a9ab4e495dfaa046402501a');
           done();
         });
     });
 
     it('should receive 404 if a record does not exist.', (done) => {
       chai.request(app)
-        .get('/database/3/connection/tally')
+        .get('/vault/3/connection/tally')
         .end((err, res) => {
           if (err) done(err);
           expect(res).to.have.status(404);
@@ -132,7 +132,7 @@ describe('vault-manager', () => {
 
     it('should receive 503 if a record with sourceId is marked with maintenance field as true.', (done) => {
       chai.request(app)
-        .get('/database/2/connection/tally')
+        .get('/vault/2/connection/tally')
         .end((err, res) => {
           if (err) done(err);
           expect(res).to.have.status(503);

@@ -7,9 +7,8 @@
     "pretest": "eslint --ignore-path .gitignore .",
     "test": "mocha ./test -name '*.spec.js' --recursive --exit",
     "test:watch": "npm test -- --watch",
-    "depcheck": "depcheck",
-    "stylecheck": "eslint src/**/*.js test/**/*.js",
-    "check": "npm audit && npm run stylecheck && npm run depcheck && npm outdated",
+    "depcheck": "depcheck",    
+    "check": "npm audit && npm run pretest && npm run depcheck && npm outdated",
     "coverage": "nyc -- npm test"
   },
   "dependencies": {

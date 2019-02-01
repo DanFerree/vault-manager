@@ -63,10 +63,10 @@ const createVault = async (sourceId) => {
   });
 
   await nextPool.query(`CREATE DATABASE ${databaseName} WITH TEMPLATE ${vaultTemplateName}`);
-  await nextPool.query(`CREATE ROLE ${tallyRole} WITH LOGIN PASSWORD '${tallyPassword}'`);
-  await nextPool.query(`CREATE ROLE ${adapterRole} WITH LOGIN PASSWORD '${adapterPassword}'`);
-  await nextPool.query(`CREATE ROLE ${apiRole}`);
-  await nextPool.query(`CREATE ROLE ${ownerRole}`);
+  // await nextPool.query(`CREATE ROLE ${tallyRole} WITH LOGIN PASSWORD '${tallyPassword}'`);
+  // await nextPool.query(`CREATE ROLE ${adapterRole} WITH LOGIN PASSWORD '${adapterPassword}'`);
+  // await nextPool.query(`CREATE ROLE ${apiRole}`);
+  // await nextPool.query(`CREATE ROLE ${ownerRole}`);
 
   await pool.query('UPDATE vault SET hostname = $1, database_name = $2, tally_role = $3, tally_password = $4, adapter_role = $5, adapter_password = $6 WHERE id = $7', [nextVaultHostName, databaseName, tallyRole, tallyPassword, adapterRole, adapterPassword, parseInt(id, 10)]);
 

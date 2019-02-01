@@ -21,6 +21,11 @@ before_install:
 # The adapter password specified below must match what is specified in .env.test.
 # For some reason Travis runs PG10 on port 5433. This must also be specified in .env.test.
 - PGPORT=5433 TALLY_ROLE="tally" TALLY_PASSWORD="tally_pw" ADAPTER_ROLE="adapter" ADAPTER_PASSWORD="adapter_pw" TRUSTED_KEY="trusted_key" sh ./sh/init.sh
+
+# Create the management database and tables.
+- cd ..
+- git clone https://github.com/dev7788/vault-manager.git
+- cd /vault-manager
 - PGPORT=5433 DB_NAME="management" DB_ROLE="manager" DB_PASSWORD="manager_pw" sh ./sh/manager_init.sh
 
 script:

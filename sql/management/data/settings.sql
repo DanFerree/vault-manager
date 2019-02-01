@@ -1,0 +1,1 @@
+INSERT INTO settings (next_vault_hostname, vault_template_name) VALUES ('localhost', 'vault');

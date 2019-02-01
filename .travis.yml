@@ -25,7 +25,7 @@ before_install:
 # Create the management database and tables.
 - cd ..
 - git clone https://github.com/dev7788/vault-manager.git
-- cd /vault-manager
+- cd ./vault-manager
 - PGPORT=5433 DB_NAME="management" DB_ROLE="manager" DB_PASSWORD="manager_pw" sh ./sh/manager_init.sh
 
 script:

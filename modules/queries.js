@@ -1,6 +1,8 @@
 require('dotenv').config();
 
 const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
 
 // eslint-disable-next-line prefer-destructuring
 const Pool = require('pg').Pool;
@@ -65,6 +67,23 @@ const createVault = async (sourceId) => {
   await nextPool.query(`CREATE ROLE ${apiRole}`);
 
   await pool.query('UPDATE vault SET hostname = $1, database_name = $2, tally_role = $3, tally_password = $4, adapter_role = $5, adapter_password = $6 WHERE id = $7', [nextVaultHostName, databaseName, tallyRole, tallyPassword, adapterRole, adapterPassword, parseInt(id, 10)]);
+
+  const absolutePath = path.resolve('modules/postsetup.sql');
+  let sql = fs.readFileSync(absolutePath).toString();
+  sql = sql.replace(/API_ROLE/g, apiRole)
+    .replace(/TALLY_ROLE/g, tallyRole)
+    .replace(/ADAPTER_ROLE/g, adapterRole)
+    .replace(/VAULT_DATABASE/g, databaseName);
+
+  const newPool = new Pool({
+    user: process.env.PGUSER,
+    hostname: nextVaultHostName,
+    database: databaseName,
+    password: process.env.PGPASSWORD,
+    port: process.env.PGPORT,
+  });
+
+  await newPool.query(sql);
 
   return { status: 201, id };
 };

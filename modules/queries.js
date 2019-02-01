@@ -43,6 +43,7 @@ const createVault = async (sourceId) => {
   const adapterRole = `vault_${id}_adapter`;
   const adapterPassword = crypto.randomBytes(16).toString('hex');
   const apiRole = `vault_${id}_api`;
+  const ownerRole = `vault_${id}_owner`;
 
   // Clone database.
   result = await pool.query('SELECT * FROM settings LIMIT 1');
@@ -65,6 +66,7 @@ const createVault = async (sourceId) => {
   await nextPool.query(`CREATE ROLE ${tallyRole} WITH LOGIN PASSWORD '${tallyPassword}'`);
   await nextPool.query(`CREATE ROLE ${adapterRole} WITH LOGIN PASSWORD '${adapterPassword}'`);
   await nextPool.query(`CREATE ROLE ${apiRole}`);
+  await nextPool.query(`CREATE ROLE ${ownerRole}`);
 
   await pool.query('UPDATE vault SET hostname = $1, database_name = $2, tally_role = $3, tally_password = $4, adapter_role = $5, adapter_password = $6 WHERE id = $7', [nextVaultHostName, databaseName, tallyRole, tallyPassword, adapterRole, adapterPassword, parseInt(id, 10)]);
 
@@ -73,7 +75,8 @@ const createVault = async (sourceId) => {
   sql = sql.replace(/API_ROLE/g, apiRole)
     .replace(/TALLY_ROLE/g, tallyRole)
     .replace(/ADAPTER_ROLE/g, adapterRole)
-    .replace(/VAULT_DATABASE/g, databaseName);
+    .replace(/OWNER_ROLE/g, ownerRole)
+    .replace(/DATABASE_NAME/g, databaseName);
 
   const newPool = new Pool({
     user: process.env.PGUSER,

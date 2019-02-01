@@ -40,7 +40,7 @@ GRANT SELECT ON ALL TABLES IN SCHEMA universal TO API_ROLE;
 
 
 --The adapter role needs the ability to create it's own schemas (eg concept & indicator)
-GRANT CREATE ON DATABASE VAULT_DATABASE to API_ROLE;
+GRANT CREATE ON DATABASE DATABASE_NAME to API_ROLE;
 
 /*************************************************************************************************/
 /* TALLY PERMISSIONS                                                                             */
@@ -56,7 +56,7 @@ GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA api TO TALLY_ROLE;
 /* ADAPTER PERMISSIONS                                                                             */
 /*************************************************************************************************/
 --The adapter role needs the ability to create it's own schemas.
-GRANT CREATE ON DATABASE VAULT_DATABASE to ADAPTER_ROLE;
+GRANT CREATE ON DATABASE DATABASE_NAME to ADAPTER_ROLE;
 
 --The adapter role needs the ability to truncate, insert, update, delete etc all data in the
 --universal schema.
@@ -68,7 +68,7 @@ GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA universal TO ADAPTER_ROLE;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA universal TO ADAPTER_ROLE;
 
 --The adapter role needs to own the universal schema to truncate tables/sequences?
-ALTER SCHEMA universal OWNER TO ADAPTER_ROLE;
+ALTER SCHEMA universal OWNER TO OWNER_ROLE;
 
 --The adapter role needs the ability to lookup objects within the api schema.
 GRANT USAGE ON SCHEMA api TO ADAPTER_ROLE;

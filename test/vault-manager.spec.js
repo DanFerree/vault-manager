@@ -21,23 +21,19 @@ chai.use(chaiHttp);
 const pool = new pg.Pool();
 
 describe('vault-manager', () => {
-  beforeEach('wipe database to prepare testing.', async () => {
-    try {
-      await pool.query('DROP DATABASE IF EXISTS vault_3');
-      await pool.query('DROP ROLE IF EXISTS vault_3_api');
-      await pool.query('DROP ROLE IF EXISTS vault_3_adapter');
-      await pool.query('DROP ROLE IF EXISTS vault_3_tally');
-      await pool.query('DELETE FROM vault');
-      await pool.query('TRUNCATE vault RESTART IDENTITY CASCADE');
-      await pool.query('INSERT INTO vault (source_id, hostname, database_name, tally_role, tally_password, adapter_role, adapter_password, maintenance) VALUES (1, \'localhost\', \'vault_1\', \'vault_1_tally\', \'e18ab7ad6a9ab4e495dfaa046402501a\', \'vault_1_adapter\', \'0f7703c45d53866913cfcad139750c71\', FALSE)');
-      await pool.query('INSERT INTO vault (source_id, hostname, database_name, tally_role, tally_password, adapter_role, adapter_password, maintenance) VALUES (2, \'localhost\', \'vault_2\', \'vault_2_tally\', \'e18ab7ad6a9ab4e495dfaa046402501b\', \'vault_2_adapter\', \'0f7703c45d53866913cfcad139750c72\', TRUE)');
-    } catch (error) {
-      console.log(error);
-    }
-  });
-
   describe('POST /vault/', () => {
     describe('Vault', () => {
+      before('wipe database to prepare testing.', async () => {
+        await pool.query('DROP DATABASE IF EXISTS vault_3');
+        await pool.query('DROP ROLE IF EXISTS vault_3_api');
+        await pool.query('DROP ROLE IF EXISTS vault_3_adapter');
+        await pool.query('DROP ROLE IF EXISTS vault_3_tally');
+        await pool.query('DELETE FROM vault');
+        await pool.query('TRUNCATE vault RESTART IDENTITY CASCADE');
+        await pool.query('INSERT INTO vault (source_id, hostname, database_name, tally_role, tally_password, adapter_role, adapter_password, maintenance) VALUES (1, \'localhost\', \'vault_1\', \'vault_1_tally\', \'e18ab7ad6a9ab4e495dfaa046402501a\', \'vault_1_adapter\', \'0f7703c45d53866913cfcad139750c71\', FALSE)');
+        await pool.query('INSERT INTO vault (source_id, hostname, database_name, tally_role, tally_password, adapter_role, adapter_password, maintenance) VALUES (2, \'localhost\', \'vault_2\', \'vault_2_tally\', \'e18ab7ad6a9ab4e495dfaa046402501b\', \'vault_2_adapter\', \'0f7703c45d53866913cfcad139750c72\', TRUE)');
+      });
+
       it('should successfully insert a record.', (done) => {
         chai.request(app)
           .post('/vault/')
@@ -97,7 +93,7 @@ describe('vault-manager', () => {
 
     it('should receive 404 if sourceId not found.', (done) => {
       chai.request(app)
-        .get('/vault/3/connection/adapter')
+        .get('/vault/4/connection/adapter')
         .end((err, res) => {
           if (err) done(err);
           expect(res).to.have.status(404);
@@ -133,7 +129,7 @@ describe('vault-manager', () => {
 
     it('should receive 404 if sourceId not found.', (done) => {
       chai.request(app)
-        .get('/vault/3/connection/tally')
+        .get('/vault/4/connection/tally')
         .end((err, res) => {
           if (err) done(err);
           expect(res).to.have.status(404);

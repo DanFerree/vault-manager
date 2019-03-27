@@ -28,7 +28,7 @@ before((done) => {
   if (envPath) {
     // eslint-disable-next-line no-console
     console.log('Loading environmental variables', envPath);
-    dotenv.load({
+    dotenv.config({
       path: envPath,
     });
     done();

@@ -3,7 +3,7 @@
 /* eslint-env and, mocha, chai */
 /* eslint-disable no-unused-expressions */
 /*  i had to add this to not error expect(res).to.be.json; statements  */
-/* jshint esversion: 6 */
+/* jshint esversion: 8 */
 /* jshint -W030 */
 /* jshint expr:true */
 
@@ -31,6 +31,7 @@ describe('vault-manager', () => {
         await pool.query('TRUNCATE vault RESTART IDENTITY CASCADE');
         await pool.query('INSERT INTO vault (source_id, hostname, database_name, tally_role, tally_password, adapter_role, adapter_password, maintenance) VALUES (1, \'localhost\', \'vault_1\', \'vault_1_tally\', \'e18ab7ad6a9ab4e495dfaa046402501a\', \'vault_1_adapter\', \'0f7703c45d53866913cfcad139750c71\', FALSE)');
         await pool.query('INSERT INTO vault (source_id, hostname, database_name, tally_role, tally_password, adapter_role, adapter_password, maintenance) VALUES (2, \'localhost\', \'vault_2\', \'vault_2_tally\', \'e18ab7ad6a9ab4e495dfaa046402501b\', \'vault_2_adapter\', \'0f7703c45d53866913cfcad139750c72\', TRUE)');
+        return pool.end();
       });
 
       it('should successfully insert a record.', (done) => {
@@ -47,13 +48,12 @@ describe('vault-manager', () => {
 
             chai.request(app)
               .get('/vault/3/connection/adapter')
-              // eslint-disable-next-line no-shadow
-              .end((err, res) => {
-                if (err) done(err);
-                expect(res).to.have.status(200);
-                expect(res.body.hostname).to.equal('localhost');
-                expect(res.body.database).to.equal('vault_3');
-                expect(res.body.username).to.equal('vault_3_adapter');
+              .end((err2, res2) => {
+                if (err2) done(err2);
+                expect(res2).to.have.status(200);
+                expect(res2.body.hostname).to.equal('localhost');
+                expect(res2.body.database).to.equal('vault_3');
+                expect(res2.body.username).to.equal('vault_3_adapter');
                 done();
               });
           });
@@ -75,7 +75,7 @@ describe('vault-manager', () => {
     });
   });
 
-  describe('GET /vault/{ sourceId }/connection/adapter', () => {
+  describe('GET /vault/{sourceId}/connection/adapter', () => {
     it('should get an adapter successfully.', (done) => {
       chai.request(app)
         .get('/vault/1/connection/adapter')

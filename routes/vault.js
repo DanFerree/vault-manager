@@ -54,6 +54,7 @@ router.get('/:sourceId/connection/tally', (request, response) => {
             database: result.data.database_name,
             username: result.data.tally_role,
             password: result.data.tally_password,
+            cert: result.data.tally_cert,
           });
           break;
         case 404:

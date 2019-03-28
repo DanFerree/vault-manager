@@ -122,7 +122,38 @@ const createVault = async (sourceId) => {
   }
 };
 
+const getVaultList = async (missingTally) => {
+  const tallyCertClause = missingTally ? ' WHERE tally_cert = \'\' or tally_cert IS NULL ' : '';
+  try {
+    const results = await pool.query(`SELECT * FROM vault ${tallyCertClause}`);
+    if (results.rowCount) {
+      const data = results.rows;
+      if (data.maintenance) {
+        return {
+          status: 503,
+        };
+      }
+      return {
+        status: 200,
+        data,
+      };
+    }
+    const data = [];
+    return {
+      status: 200,
+      data,
+    };
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(`db connection error: ${error}`);
+    return {
+      status: 500,
+    };
+  }
+};
+
 module.exports = {
   getVaultBySourceId,
   createVault,
+  getVaultList,
 };

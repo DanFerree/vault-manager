@@ -76,6 +76,33 @@ router.get('/:sourceId/connection/tally', (request, response) => {
     });
 });
 
+// GET /vault/?missingTally=true
+router.get('/', (request, response) => {
+  db.getVaultList(request.query.missingTally === 'true')
+    .then((result) => {
+      switch (result.status) {
+        case 200:
+          response.status(200).json(result.data);
+          break;
+        case 404:
+          response.status(404).json({
+            msg: 'a record with sourceId does not exist.',
+          });
+          break;
+        default:
+          response.status(503).json({
+            msg: 'a record with sourceId is marked with maintenance field as true.',
+          });
+          break;
+      }
+    }).catch((error) => {
+      response.status(500).json({
+        msg: 'internal server error.',
+      });
+      throw error;
+    });
+});
+
 router.post('/', (request, response) => {
   const {
     sourceId,

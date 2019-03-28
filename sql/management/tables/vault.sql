@@ -2,6 +2,7 @@ CREATE TABLE vault (
   id BIGSERIAL PRIMARY KEY,
   source_id TEXT UNIQUE,
   hostname TEXT,
+  port integer NOT NULL DEFAULT 5432,
   database_name TEXT,
   tally_role TEXT,
   tally_password TEXT,

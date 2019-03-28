@@ -89,7 +89,7 @@ const createVault = async (sourceId) => {
     // await nextPool.query(`CREATE ROLE ${apiRole}`);
     // await nextPool.query(`CREATE ROLE ${ownerRole}`);
 
-    await pool.query('UPDATE vault SET hostname = $1, database_name = $2, tally_role = $3, tally_password = $4, adapter_role = $5, adapter_password = $6 WHERE id = $7', [nextVaultHostName, databaseName, tallyRole, tallyPassword, adapterRole, adapterPassword, parseInt(id, 10)]);
+    await pool.query('UPDATE vault SET hostname = $1, database_name = $2, tally_role = $3, tally_password = $4, adapter_role = $5, adapter_password = $6, port = $7 WHERE id = $8', [nextVaultHostName, databaseName, tallyRole, tallyPassword, adapterRole, adapterPassword, 5432, parseInt(id, 10)]);
 
     const absolutePath = path.resolve('modules/postsetup.sql');
     let sql = fs.readFileSync(absolutePath).toString();

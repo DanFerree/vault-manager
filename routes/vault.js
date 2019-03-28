@@ -16,6 +16,7 @@ router.get('/:sourceId/connection/adapter', (request, response) => {
         case 200:
           response.status(200).json({
             hostname: result.data.hostname,
+            port: result.data.port,
             database: result.data.database_name,
             username: result.data.adapter_role,
             password: result.data.adapter_password,
@@ -49,6 +50,7 @@ router.get('/:sourceId/connection/tally', (request, response) => {
         case 200:
           response.status(200).json({
             hostname: result.data.hostname,
+            port: result.data.port,
             database: result.data.database_name,
             username: result.data.tally_role,
             password: result.data.tally_password,

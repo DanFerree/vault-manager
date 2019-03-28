@@ -29,8 +29,8 @@ describe('vault-manager', () => {
         await pool.query('DROP ROLE IF EXISTS vault_3_adapter');
         await pool.query('DROP ROLE IF EXISTS vault_3_tally');
         await pool.query('TRUNCATE vault RESTART IDENTITY CASCADE');
-        await pool.query('INSERT INTO vault (source_id, hostname, database_name, tally_role, tally_password, adapter_role, adapter_password, maintenance) VALUES (1, \'localhost\', \'vault_1\', \'vault_1_tally\', \'e18ab7ad6a9ab4e495dfaa046402501a\', \'vault_1_adapter\', \'0f7703c45d53866913cfcad139750c71\', FALSE)');
-        await pool.query('INSERT INTO vault (source_id, hostname, database_name, tally_role, tally_password, adapter_role, adapter_password, maintenance) VALUES (2, \'localhost\', \'vault_2\', \'vault_2_tally\', \'e18ab7ad6a9ab4e495dfaa046402501b\', \'vault_2_adapter\', \'0f7703c45d53866913cfcad139750c72\', TRUE)');
+        await pool.query('INSERT INTO vault (source_id, hostname, port, database_name, tally_role, tally_password, adapter_role, adapter_password, maintenance) VALUES (1, \'localhost\', 5432, \'vault_1\', \'vault_1_tally\', \'e18ab7ad6a9ab4e495dfaa046402501a\', \'vault_1_adapter\', \'0f7703c45d53866913cfcad139750c71\', FALSE)');
+        await pool.query('INSERT INTO vault (source_id, hostname, port, database_name, tally_role, tally_password, adapter_role, adapter_password, maintenance) VALUES (2, \'localhost\', 5432, \'vault_2\', \'vault_2_tally\', \'e18ab7ad6a9ab4e495dfaa046402501b\', \'vault_2_adapter\', \'0f7703c45d53866913cfcad139750c72\', TRUE)');
         return pool.end();
       });
 
@@ -52,6 +52,7 @@ describe('vault-manager', () => {
                 if (err2) done(err2);
                 expect(res2).to.have.status(200);
                 expect(res2.body.hostname).to.equal('localhost');
+                expect(res2.body.port).to.equal(5432);
                 expect(res2.body.database).to.equal('vault_3');
                 expect(res2.body.username).to.equal('vault_3_adapter');
                 done();
@@ -83,6 +84,7 @@ describe('vault-manager', () => {
           if (err) done(err);
           expect(res).to.have.status(200);
           expect(res.body.hostname).to.equal('localhost');
+          expect(res.body.port).to.equal(5432);
           expect(res.body.database).to.equal('vault_1');
           expect(res.body.username).to.equal('vault_1_adapter');
           expect(res.body.password).to.equal('0f7703c45d53866913cfcad139750c71');
@@ -119,6 +121,7 @@ describe('vault-manager', () => {
           if (err) done(err);
           expect(res).to.have.status(200);
           expect(res.body.hostname).to.equal('localhost');
+          expect(res.body.port).to.equal(5432);
           expect(res.body.database).to.equal('vault_1');
           expect(res.body.username).to.equal('vault_1_tally');
           expect(res.body.password).to.equal('e18ab7ad6a9ab4e495dfaa046402501a');

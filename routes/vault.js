@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* jshint esversion: 8 */
 
 const express = require('express');
@@ -101,6 +100,45 @@ router.get('/', (request, response) => {
       });
       throw error;
     });
+});
+
+// POST /vault/:sourceId/ that takes body { "tally_cert": "Base64String" }
+router.post('/:sourceId/', (request, response) => {
+  const {
+    sourceId,
+  } = request.params;
+
+  if (typeof request.body === 'object' && typeof request.body.tally_cert === 'string' && request.body.tally_cert) {
+    db.updateTallyCert(request.body.tally_cert, sourceId)
+      .then((result) => {
+        switch (result.status) {
+          case 200:
+            response.status(200).json({
+              msg: 'updated',
+            });
+            break;
+          case 404:
+            response.status(404).json({
+              msg: 'a record with sourceId does not exist.',
+            });
+            break;
+          default:
+            response.status(400).json({
+              msg: 'invalid request.',
+            });
+            break;
+        }
+      }).catch((error) => {
+        response.status(500).json({
+          msg: 'internal server error.',
+        });
+        throw error;
+      });
+  } else {
+    response.status(400).json({
+      msg: 'invalid request.',
+    });
+  }
 });
 
 router.post('/', (request, response) => {

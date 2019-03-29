@@ -152,8 +152,35 @@ const getVaultList = async (missingTally) => {
   }
 };
 
+const updateTallyCert = async (tallyCert, sourceId) => {
+  try {
+    const results = await pool.query('UPDATE vault SET tally_cert = $1 WHERE source_id = $2', [tallyCert, sourceId]);
+    switch (results.rowCount) {
+      case 0:
+        return {
+          status: 404,
+        };
+      case 1:
+        return {
+          status: 200,
+        };
+      default:
+        return {
+          status: 400,
+        };
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(`db error: ${error}`);
+    return {
+      status: 500,
+    };
+  }
+};
+
 module.exports = {
   getVaultBySourceId,
   createVault,
   getVaultList,
+  updateTallyCert,
 };

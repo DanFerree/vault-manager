@@ -73,6 +73,7 @@ const createVault = async (sourceId) => {
     }
     const settings = result.rows[0];
     const nextVaultHostName = settings.next_vault_hostname;
+    const nextVaultPort = settings.next_vault_port;
     const vaultTemplateName = settings.vault_template_name;
 
     const nextPool = new Pool({
@@ -80,7 +81,7 @@ const createVault = async (sourceId) => {
       hostname: nextVaultHostName,
       database: vaultTemplateName,
       password: process.env.PGPASSWORD,
-      port: process.env.PGPORT,
+      port: nextVaultPort,
     });
 
     await nextPool.query(`CREATE DATABASE ${databaseName} WITH TEMPLATE ${vaultTemplateName}`);
@@ -89,7 +90,7 @@ const createVault = async (sourceId) => {
     // await nextPool.query(`CREATE ROLE ${apiRole}`);
     // await nextPool.query(`CREATE ROLE ${ownerRole}`);
 
-    await pool.query('UPDATE vault SET hostname = $1, database_name = $2, tally_role = $3, tally_password = $4, adapter_role = $5, adapter_password = $6, port = $7 WHERE id = $8', [nextVaultHostName, databaseName, tallyRole, tallyPassword, adapterRole, adapterPassword, 5432, parseInt(id, 10)]);
+    await pool.query('UPDATE vault SET hostname = $1, database_name = $2, tally_role = $3, tally_password = $4, adapter_role = $5, adapter_password = $6, port = $7 WHERE id = $8', [nextVaultHostName, databaseName, tallyRole, tallyPassword, adapterRole, adapterPassword, nextVaultPort, parseInt(id, 10)]);
 
     const absolutePath = path.resolve('modules/postsetup.sql');
     let sql = fs.readFileSync(absolutePath).toString();
@@ -104,7 +105,7 @@ const createVault = async (sourceId) => {
       hostname: nextVaultHostName,
       database: databaseName,
       password: process.env.PGPASSWORD,
-      port: process.env.PGPORT,
+      port: nextVaultPort,
     });
 
     await newPool.query(sql);
